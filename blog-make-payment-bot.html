@@ -1,1 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Build a Payment Bot with Make.com (No Code) | AutoPayBot</title>
+<meta name="description" content="Step-by-step tutorial to build a free payment automation bot using Make.com. No coding required. Automate invoices, reminders and receipts in 30 minutes.">
+<meta name="keywords" content="make.com payment bot, payment automation no code, automate invoices make.com, payment bot tutorial free">
+<link rel="canonical" href="https://autopaybot.com/blog-make-payment-bot.html">
+<meta property="og:title" content="How to Build a Payment Bot with Make.com (No Code)">
+<meta property="og:description" content="Step-by-step tutorial to build a free payment automation bot using Make.com. No coding required.">
+<meta property="og:url" content="https://autopaybot.com/blog-make-payment-bot.html">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050508;
+  --surface: #0d0d14;
+  --card: #111119;
+  --border: #1a1a28;
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --green: #10b981;
+  --text: #e2e2f0;
+  --muted: #6b6b8a;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,8,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: white;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent2); }
+.nav-back {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--text); }
 
+.article-wrap {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 100px 24px 80px;
+}
+
+.article-category {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent2);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.05;
+  color: white;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  background: rgba(16,185,129,0.1);
+  color: var(--green);
+  border: 1px solid rgba(16,185,129,0.2);
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.article-body p {
+  margin-bottom: 20px;
+  color: #c8c8e0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.article-body h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  color: white;
+  letter-spacing: 0.03em;
+  margin: 48px 0 16px;
+}
+
+.article-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 32px 0 12px;
+}
+
+.article-body ul, .article-body ol {
+  padding-left: 24px;
+  margin-bottom: 20px;
+  color: #c8c8e0;
+}
+
+.article-body li {
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+
+.article-body strong { color: white; font-weight: 600; }
+
+.article-body a {
+  color: var(--accent2);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168,85,247,0.3);
+  transition: border-color 0.2s;
+}
+
+.article-body a:hover { border-color: var(--accent2); }
+
+.callout {
+  background: rgba(124,58,237,0.08);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin: 28px 0;
+}
+
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.callout p { margin: 0; color: #c8c8e0; font-size: 15px; }
+
+.step-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.step-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: rgba(124,58,237,0.3);
+  line-height: 1;
+  min-width: 40px;
+}
+
+.step-content h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.tool-mention {
+  display: inline-block;
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.2);
+  color: var(--green);
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.faq-block {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.faq-q {
+  padding: 18px 20px;
+  font-weight: 600;
+  color: white;
+  font-size: 15px;
+  background: var(--card);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-a {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+}
+
+.cta-box {
+  background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(168,85,247,0.08));
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 12px;
+  padding: 36px;
+  text-align: center;
+  margin: 48px 0 0;
+}
+
+.cta-box h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.cta-box p {
+  color: var(--muted);
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+}
+
+/* Schema markup helper */
+.article-schema { display: none; }
+</style>
+
+<!-- Schema Markup for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Build a Payment Bot with Make.com (No Code)",
+  "description": "Step-by-step tutorial to build a free payment automation bot using Make.com. No coding required.",
+  "url": "https://autopaybot.com/blog-make-payment-bot.html",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AutoPayBot",
+    "url": "https://autopaybot.com"
+  },
+  "datePublished": "2025-01-01",
+  "dateModified": "2025-01-01"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Make.com free for payment automation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Make.com's free plan includes 1,000 operations per month — more than enough for most freelancers and small businesses starting with payment automation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need coding skills to build a payment bot on Make.com?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No coding required at all. Make.com is a visual drag-and-drop platform. You connect apps with clicks, not code."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which payment platforms does Make.com support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Make.com supports Stripe, PayPal, Square, Paddle, LemonSqueezy and 1,000+ other apps through native integrations."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Auto<span>Pay</span>Bot</a>
+  <a class="nav-back" href="index.html">← Back to Home</a>
+</nav>
+
+<article class="article-wrap">
+  <div class="article-category">Tutorial · Payment Automation</div>
+  <h1>How to Build a Payment Bot with Make.com (No Code)</h1>
+  <div class="article-meta">
+    <span>⏱ 8 min read</span>
+    <span>🛠 Difficulty: Beginner</span>
+    <span class="meta-tag">FREE TOOL</span>
+    <span>Updated 2025</span>
+  </div>
+
+  <div class="article-body">
+
+    <p>If you're a freelancer or small business owner still sending invoices manually and chasing late payments — you're losing more than just time. The average freelancer spends <strong>6 hours every month</strong> on payment admin. This tutorial shows you how to build a payment bot using <span class="tool-mention">Make.com</span> that handles invoices, follow-ups and receipts automatically — for free.</p>
+
+    <div class="callout">
+      <div class="callout-label">⚡ Quick Summary</div>
+      <p>You'll build a bot that: (1) sends an invoice when a project is marked complete, (2) follows up automatically if unpaid after 3 days, (3) sends a receipt when payment is received. Total setup time: 30 minutes. Cost: $0.</p>
+    </div>
+
+    <h2>WHAT IS MAKE.COM?</h2>
+    <p>Make.com (formerly Integromat) is a free visual automation platform. Think of it as a flowchart where each box is an app — Stripe, Gmail, Google Sheets, Slack — and you connect them together with clicks. No code. No developer. When something happens in one app, Make.com automatically does something in another.</p>
+    <p>For payment automation, it's the most powerful free tool available. The free plan gives you <strong>1,000 operations per month</strong> — enough to handle 200+ invoices.</p>
+
+    <h2>WHAT YOU'LL NEED</h2>
+    <ul>
+      <li><strong>Make.com account</strong> — free at make.com</li>
+      <li><strong>Stripe account</strong> — free at stripe.com (or PayPal)</li>
+      <li><strong>Gmail account</strong> — for sending emails</li>
+      <li><strong>Google Sheets</strong> — to track client jobs (optional but recommended)</li>
+    </ul>
+
+    <h2>STEP-BY-STEP: BUILD YOUR PAYMENT BOT</h2>
+
+    <div class="step-block">
+      <div class="step-number">01</div>
+      <div class="step-content">
+        <h3>Create a Make.com Account</h3>
+        <p>Go to make.com → click "Get started free" → sign up with Google or email. No credit card needed. You'll land on the Make dashboard.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">02</div>
+      <div class="step-content">
+        <h3>Create a New Scenario</h3>
+        <p>Click "Create a new scenario" → you'll see a blank canvas with a big "+" button. This is where you build your bot visually. Each module is an app action.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">03</div>
+      <div class="step-content">
+        <h3>Set the Trigger — Google Sheets Row Updated</h3>
+        <p>Click "+" → search "Google Sheets" → select "Watch Rows". This means: when you mark a job as "Complete" in your sheet, the bot wakes up. Connect your Google account and select your jobs spreadsheet.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">04</div>
+      <div class="step-content">
+        <h3>Add Action — Create Stripe Invoice</h3>
+        <p>Click "+" after the trigger → search "Stripe" → select "Create Invoice". Connect your Stripe account. Map the fields: client email, amount, description — pulled from your Google Sheet columns automatically.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">05</div>
+      <div class="step-content">
+        <h3>Add Action — Send Invoice Email via Gmail</h3>
+        <p>Click "+" → search "Gmail" → select "Send an Email". Write your invoice email template. Use Make.com variables to insert client name, amount, and the Stripe invoice link dynamically.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">06</div>
+      <div class="step-content">
+        <h3>Add Delay + Follow-Up Reminder</h3>
+        <p>Click "+" → search "Sleep" → set 3 days delay. After the delay, add another Gmail module — "Send an Email" — with a polite payment reminder template. This fires automatically if the invoice is still unpaid.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-number">07</div>
+      <div class="step-content">
+        <h3>Set the Schedule + Activate</h3>
+        <p>Click the clock icon → set scenario to run "Every 15 minutes". Click the blue toggle to activate. Your payment bot is now live. Test it by marking one row as "Complete" in your sheet.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">💡 Pro Tip</div>
+      <p>Add a Slack notification module at the end — so you get a Slack ping every time an invoice is sent or a payment is received. Takes 2 minutes and keeps you informed without checking Stripe constantly.</p>
+    </div>
+
+    <h2>EMAIL TEMPLATES (COPY-PASTE)</h2>
+
+    <h3>Invoice Email Template</h3>
+    <p>Subject: <strong>Invoice #{{invoice_number}} — {{project_name}}</strong></p>
+    <p>Hi {{client_name}},</p>
+    <p>Thank you for working with me on {{project_name}}. Please find your invoice of <strong>{{amount}}</strong> at the link below. Payment is due within 7 days.</p>
+    <p>👉 Pay Here: {{stripe_invoice_link}}</p>
+    <p>Let me know if you have any questions. Thank you!</p>
+
+    <h3>Follow-Up Reminder Template</h3>
+    <p>Subject: <strong>Friendly Reminder — Invoice #{{invoice_number}} Due</strong></p>
+    <p>Hi {{client_name}}, just a quick reminder that invoice #{{invoice_number}} for {{amount}} is still outstanding. You can pay here: {{stripe_invoice_link}}. Thank you!</p>
+
+    <h2>FREQUENTLY ASKED QUESTIONS</h2>
+
+    <div class="faq-block">
+      <div class="faq-q">Is Make.com free for payment automation? <span>+</span></div>
+      <div class="faq-a">Yes. Make.com's free plan includes 1,000 operations per month — more than enough for most freelancers and small businesses starting with payment automation.</div>
+    </div>
+
+    <div class="faq-block">
+      <div class="faq-q">Do I need coding skills to build a payment bot on Make.com? <span>+</span></div>
+      <div class="faq-a">No coding required at all. Make.com is a visual drag-and-drop platform. You connect apps with clicks, not code. If you can use Gmail, you can use Make.com.</div>
+    </div>
+
+    <div class="faq-block">
+      <div class="faq-q">Which payment platforms does Make.com support? <span>+</span></div>
+      <div class="faq-a">Make.com supports Stripe, PayPal, Square, Paddle, LemonSqueezy and 1,000+ other apps through native integrations — all available on the free plan.</div>
+    </div>
+
+    <h2>NEXT STEPS</h2>
+    <p>Now that your first payment bot is live, here's what to set up next:</p>
+    <ul>
+      <li>→ <a href="index.html#tools">Explore more free payment automation tools</a></li>
+      <li>→ Set up failed payment recovery automation (dunning)</li>
+      <li>→ Add a receipt bot that fires when Stripe confirms payment</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>GET THE FREE CHECKLIST</h3>
+      <p>27-step Payment Automation Checklist — never chase an invoice again.</p>
+      <a href="index.html#newsletter" class="btn-primary">Download Free →</a>
+    </div>
+
+  </div>
+</article>
+
+</body>
+</html>
