@@ -108,3 +108,6 @@ print(f"Saved: {filename}")
 search_console_url = f"https://autopaybot.com/{filename}"
 print(f"New post URL: {search_console_url}")
 print("Submit this URL manually to Google Search Console -> URL Inspection -> Request Indexing")
+# Inject affiliate links automatically
+from inject_affiliates import inject_affiliate_links
+html_content = inject_affiliate_links(html_content)
