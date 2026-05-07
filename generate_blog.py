@@ -104,3 +104,7 @@ with open(filename, 'w', encoding='utf-8') as f:
   f.write(html_content)
 
 print(f"Saved: {filename}")
+# Auto submit to Google Search Console
+search_console_url = f"https://autopaybot.com/{filename}"
+print(f"New post URL: {search_console_url}")
+print("Submit this URL manually to Google Search Console -> URL Inspection -> Request Indexing")
