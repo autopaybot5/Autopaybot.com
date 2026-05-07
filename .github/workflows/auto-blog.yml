@@ -1,15 +1,14 @@
-
 name: Auto Blog Post
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # Daily 9 AM IST (3 AM UTC)
-  workflow_dispatch:  # Manual trigger bhi possible
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 
 jobs:
   generate-blog:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -22,124 +21,15 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Generate and publish blog post
+      - name: Generate blog post
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python3 generate_blog.py
+
+      - name: Commit and push
         run: |
-          python3 << 'EOF'
-          import requests
-          import json
-          import os
-          import re
-          from datetime import datetime
-
-          topics = [
-            {"topic": "How to Automate Invoice Collection Using a Free Bot", "keyword": "automate invoice bot free"},
-            {"topic": "Best Payment Automation Tools for Freelancers 2025", "keyword": "payment automation freelancers"},
-            {"topic": "Setting Up Automatic Payment Reminders No Code", "keyword": "automatic payment reminders free"},
-            {"topic": "How to Stop Chasing Late Payments With Automation", "keyword": "stop late payments automation"},
-            {"topic": "Make.com vs Zapier for Payment Automation", "keyword": "make.com vs zapier payments"},
-            {"topic": "How to Build a WhatsApp Payment Reminder Bot", "keyword": "whatsapp payment reminder bot"},
-            {"topic": "Stripe Automation 7 Workflows You Can Set Up Today", "keyword": "stripe automation workflows"},
-            {"topic": "Free Invoice Automation Workflow Template", "keyword": "invoice automation template free"},
-            {"topic": "AI Chatbots That Collect Payments Full Guide", "keyword": "AI chatbot collect payments"},
-            {"topic": "GoCardless Review Best for Automated Bank Transfers", "keyword": "gocardless review automated"},
-            {"topic": "How to Automate PayPal Invoices Using AI", "keyword": "automate paypal invoices AI"},
-            {"topic": "Payment Automation for Agencies Save 10 Hours Week", "keyword": "payment automation agencies"},
-            {"topic": "How to Create a Recurring Payment Bot Without Code", "keyword": "recurring payment bot no code"},
-            {"topic": "Failed Payment Recovery How to Automate Dunning", "keyword": "automate dunning failed payments"},
-            {"topic": "Best No Code Tools to Accept Payments Without Developer", "keyword": "no code accept payments"},
-            {"topic": "How to Send Automated Payment Reminders for Free", "keyword": "automated payment reminders free"},
-            {"topic": "Stripe vs Paddle vs LemonSqueezy Which Automates Best", "keyword": "stripe paddle lemonsqueezy compare"},
-            {"topic": "How to Auto Generate Invoices From Google Forms", "keyword": "auto generate invoices google forms"},
-            {"topic": "Payment Automation for SaaS Founders Full Guide", "keyword": "saas payment automation guide"},
-            {"topic": "How Freelancers Are Using AI to Get Paid Faster", "keyword": "AI freelancers get paid faster"},
-          ]
-
-          # Track which topic to use today
-          day_of_year = datetime.now().timetuple().tm_yday
-          topic_index = day_of_year % len(topics)
-          selected = topics[topic_index]
-
-          print(f"Generating post for: {selected['topic']}")
-
-          # Call Groq API
-          headers = {
-            "Authorization": f"Bearer {os.environ['GROQ_API_KEY']}",
-            "Content-Type": "application/json"
-          }
-
-          prompt = f"""Write a complete 1000 word SEO blog post for autopaybot.com.
-          Topic: {selected['topic']}
-          Target Keyword: {selected['keyword']}
-
-          Output ONLY this complete HTML — no explanation, no markdown:
-
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>{selected['topic']} | AutoPayBot</title>
-          <meta name="description" content="Learn {selected['keyword']} with this free step-by-step guide.">
-          <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-          <style>
-          *{{margin:0;padding:0;box-sizing:border-box;}}
-          body{{background:#050508;color:#e2e2f0;font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;}}
-          nav{{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(5,5,8,0.95);border-bottom:1px solid #1a1a28;z-index:100;}}
-          .logo{{font-family:'Bebas Neue',sans-serif;font-size:22px;color:white;text-decoration:none;}}
-          .logo span{{color:#a855f7;}}
-          .back{{font-size:13px;color:#6b6b8a;text-decoration:none;}}
-          .wrap{{max-width:740px;margin:0 auto;padding:100px 24px 80px;}}
-          h1{{font-family:'Bebas Neue',sans-serif;font-size:48px;color:white;line-height:1.05;margin-bottom:20px;}}
-          .meta{{font-size:13px;color:#6b6b8a;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #1a1a28;}}
-          h2{{font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;margin:40px 0 14px;}}
-          p{{color:#c0c0d8;margin-bottom:18px;}}
-          ul,ol{{padding-left:24px;margin-bottom:18px;}}
-          li{{color:#c0c0d8;margin-bottom:10px;}}
-          strong{{color:white;}}
-          a{{color:#a855f7;text-decoration:none;}}
-          .cta{{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:32px;text-align:center;margin-top:48px;}}
-          .cta h3{{font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;margin-bottom:10px;}}
-          .btn{{display:inline-block;background:#7c3aed;color:white;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;}}
-          footer{{text-align:center;padding:40px 24px;color:#6b6b8a;font-size:13px;border-top:1px solid #1a1a28;margin-top:60px;}}
-          </style>
-          </head>
-          <body>
-          <nav><a class="logo" href="index.html">Auto<span>Pay</span>Bot</a><a class="back" href="index.html">← Home</a></nav>
-          <div class="wrap">
-          [WRITE FULL BLOG POST CONTENT HERE - h1, introduction, h2 sections, numbered steps, FAQ, conclusion]
-          <div class="cta"><h3>GET THE FREE CHECKLIST</h3><p>27 steps to automate your payments completely.</p><a class="btn" href="index.html#newsletter">Download Free</a></div>
-          </div>
-          <footer>© 2025 AutoPayBot.com · <a href="index.html">Home</a></footer>
-          </body>
-          </html>"""
-
-          data = {
-            "model": "llama3-70b-8192",
-            "messages": [
-              {"role": "system", "content": "You are an expert blog writer. Output only complete HTML. No markdown. No explanation."},
-              {"role": "user", "content": prompt}
-            ],
-            "max_tokens": 3000,
-            "temperature": 0.7
-          }
-
-          response = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers=headers,
-            json=data
-          )
-
-          result = response.json()
-          html_content = result['choices'][0]['message']['content']
-
-          # Clean filename
-          filename = selected['topic'].lower()
-          filename = re.sub(r'[^a-z0-9\s-]', '', filename)
-          filename = re.sub(r'\s+', '-', filename).strip('-')
-          filename = f"blog-{filename}.html"
-
-          # Save file
-          with open(filename, 'w', encoding='utf-8') as f:
-            f.write(html_content) 
+          git config --global user.email "autopaybot@github.com"
+          git config --global user.name "AutoPayBot"
+          git add *.html
+          git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d')"
+          git push
