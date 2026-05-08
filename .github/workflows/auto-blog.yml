@@ -31,7 +31,8 @@ jobs:
           git config --global user.email "autopaybot@github.com"
           git config --global user.name "AutoPayBot"
           git fetch origin main
-          git reset --hard origin/main
-          git add *.html
+          git checkout main
+          git pull origin main --no-rebase
+          git add -A
           git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d')"
           git push origin main
