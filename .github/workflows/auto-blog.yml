@@ -26,13 +26,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python3 generate_blog.py
 
+      
       - name: Commit and push
         run: |
           git config --global user.email "autopaybot@github.com"
           git config --global user.name "AutoPayBot"
-          git stash
-          git pull origin main
-          git stash pop
           git add -A
           git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d-%H%M%S')"
-          git push origin main
+          git push origin main --force
