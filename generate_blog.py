@@ -111,3 +111,29 @@ print("Submit this URL manually to Google Search Console -> URL Inspection -> Re
 # Inject affiliate links automatically
 from inject_affiliates import inject_affiliate_links
 html_content = inject_affiliate_links(html_content)
+# Auto update index.html with new blog card
+with open('index.html', 'r', encoding='utf-8') as f:
+    index_content = f.read()
+
+new_card = f'''
+    <a href="{filename}" class="blog-card fade-up">
+      <div class="blog-thumb thumb-1">💳</div>
+      <div class="blog-body">
+        <div class="blog-cat">Tutorial</div>
+        <div class="blog-title">{selected['topic']}</div>
+        <div class="blog-meta">8 min read · Payment Automation</div>
+        <span class="blog-arrow">Read Guide →</span>
+      </div>
+    </a>'''
+
+# Insert new card before closing blog grid div
+index_content = index_content.replace(
+    '<a href="#" class="blog-card fade-up" onclick="showModal(event)">',
+    new_card + '\n    <a href="#" class="blog-card fade-up" onclick="showModal(event)">',
+    1
+)
+
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(index_content)
+
+print(f"Homepage updated with new blog card!")
