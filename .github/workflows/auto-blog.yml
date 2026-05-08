@@ -30,9 +30,9 @@ jobs:
         run: |
           git config --global user.email "autopaybot@github.com"
           git config --global user.name "AutoPayBot"
-          git fetch origin main
-          git checkout main
-          git pull origin main --no-rebase
+          git stash
+          git pull origin main
+          git stash pop
           git add -A
-          git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d-%H%M%S')"
           git push origin main
