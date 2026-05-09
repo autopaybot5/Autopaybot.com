@@ -36,13 +36,17 @@ selected = topics[topic_index]
 filename_base = selected['topic'].lower()
 filename_base = re.sub(r'[^a-z0-9\s-]', '', filename_base)
 filename_base = re.sub(r'\s+', '-', filename_base).strip('-')
-filename = f"blog-{filename_base}-{today}.html"
+filename = f"blog-{filename_base}.html"
 
 # Skip if already exists
 if os.path.exists(filename):
-    print(f"Already exists today: {filename} — skipping")
-    exit(0)
-
+    print(f"Already exists: {filename} — skipping, picking next topic")
+    topic_index = (topic_index + 1) % len(topics)
+    selected = topics[topic_index]
+    filename_base = selected['topic'].lower()
+    filename_base = re.sub(r'[^a-z0-9\s-]', '', filename_base)
+    filename_base = re.sub(r'\s+', '-', filename_base).strip('-')
+    filename = f"blog-{filename_base}.html"
 print(f"Topic: {selected['topic']}")
 print(f"Filename: {filename}")
 
