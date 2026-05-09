@@ -36,6 +36,7 @@ jobs:
         run: |
           git config --global user.email "autopaybot@github.com"
           git config --global user.name "AutoPayBot"
+          git pull origin main --rebase --autostash
           git add -A
           git diff --staged --quiet || git commit -m "Auto blog: $(date '+%Y-%m-%d-%H%M%S')"
-          git push
+          git push origin main
