@@ -194,12 +194,20 @@ try:
       </div>
     </a>'''
 
-  index_content = index_content.replace(
+  # Try multiple replace patterns
+replaced = False
+for pattern in [
     '<a href="#" class="blog-card fade-up" onclick="showModal(event)">',
-    new_card + '\n    <a href="#" class="blog-card fade-up" onclick="showModal(event)">',
-    1
-  )
+    'onclick="showModal(event)">',
+    '<!-- NEW BLOG CARDS HERE -->',
+]:
+    if pattern in index_content:
+        index_content = index_content.replace(pattern, new_card + '\n    ' + pattern, 1)
+        replaced = True
+        break
 
+if not replaced:
+    print("Pattern not found in index.html — card not added")
   with open('index.html', 'w', encoding='utf-8') as f:
     f.write(index_content)
 
